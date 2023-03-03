@@ -20,56 +20,19 @@ export const dataState: Count = {
   },
   },
   listOfOrders: [],
-  connectionLoading: false,
-  connectionError: false,
-  connectionSuccess: false,
-  dataSuccess: false,
 }
 export const dataSlice = createSlice({
   name: 'data',
   initialState: dataState,
   reducers: {
-      //Запускает загрузку, использую для анимаций и своевременного отображения контента
-      connecting: (state) => {
-          state.connectionLoading = true
-      },
-      //Выключает анимацию загрузки, отрисовывает контент
-      connectingSuccess: (state) => {
-          state.connectionLoading = false
-          state.connectionSuccess = true
-      },
-      //Записывает данные в хранилище
-      getDataSuccess: (state, { payload }) => {
-          state.data = payload
-          // state.data1 = payload.orders
-          state.dataSuccess = true
-          state.connectionLoading = false
-          state.connectionSuccess = true
-      },
-      //Записывает данные в хранилище
-      getList: (state, { payload }) => {
-          state.data = payload
-          state.dataSuccess = true
-          state.connectionLoading = false
-          state.connectionSuccess = true
-      },
-      //Выводит ошибку
-      ConnectingFail: (state) => {
-          state.connectionLoading = false
-          state.connectionSuccess = false
-          state.dataSuccess = false
-          state.connectionError = true
-      },
-      //Добавить запись
-      addToList: (state, { payload }) => {
-        state.listOfOrders.push(payload)
-      },
-
-    }
+    addToList: (state, { payload }) => {
+      state.listOfOrders = payload
+  },
+  }
 })
 
 export const {
-  connecting, connectingSuccess, getDataSuccess, ConnectingFail, addToList
+  addToList
 } = dataSlice.actions
 
 export const dataSelector = (state: { data: any; }) => state.data

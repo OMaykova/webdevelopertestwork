@@ -21,8 +21,4 @@ export interface Quote {
 export interface Count {
     data: any;
     listOfOrders: Array<any>;
-    connectionLoading: boolean;
-    connectionError: boolean;
-    connectionSuccess: boolean;
-    dataSuccess: boolean;
 }

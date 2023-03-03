@@ -10,7 +10,7 @@ function Ticker() {
   const dispatch = useDispatch();
   const { data, listOfOrders } = useSelector(dataSelector);
   const [selectValue, setSelectValue] = useState<Instrument>(1);
-  const [isInputAmount, setIsInputAmount] = useState(true);
+  const [isInputAmount, setIsInputAmount] = useState<boolean>(true);
   const [amount, setAmount] = useState<number|''>('');
 
   function handleChangeSelect(e: any) {
@@ -34,25 +34,29 @@ function Ticker() {
     }
   }
 
-  function handleClickBtn(rate: Decimal) {
+  function handleClickBtn(rate: Decimal, e: any) {
+    e.preventDefault();
     let date: Date = new Date();
     let dateOfCreate = `${date.getFullYear()}.${date.getMonth()}.${date.getDay()}`
-
+  
     if (listOfOrders.length === 0) {
+      let array = [];
       let order: PlaceOrder = {
-        id: 0,
+        id: 1,
         creationTime: dateOfCreate,
         changeTime: dateOfCreate,
         status: 1,
-        side: 1,
+        side: 2,
         price: rate,
         amount: amount,
         instrument: selectValue,
-      }
-      dispatch(addToList(order))
+      } 
+      array.push(order)
+      dispatch(addToList(array))
     } else {
+      let array = Array.from(listOfOrders)
       let order: PlaceOrder = {
-        id: listOfOrders.length,
+        id: listOfOrders.length + 1,
         creationTime: dateOfCreate,
         changeTime: dateOfCreate,
         status: 1,
@@ -61,10 +65,11 @@ function Ticker() {
         amount: amount,
         instrument: selectValue,
       }
-      dispatch(addToList(order))
+      array.push(order)
+      dispatch(addToList(array))
     }
-    alert('Ваша заявка принята!')
     setAmount('')
+    alert('Ваша заявка принята!')
   }
 
   return (
@@ -96,7 +101,7 @@ function Ticker() {
                 </button>
               : 
                 <button
-                  onClick={() => handleClickBtn(data.rateSell[Instrument[selectValue]])}
+                  onClick={(e) => handleClickBtn(data.rateSell[Instrument[selectValue]], e)}
                   className='button__sell'>
                   SELL
                 </button>
@@ -112,7 +117,7 @@ function Ticker() {
                 </button>
               : 
                 <button
-                  onClick={() => handleClickBtn(data.rateBuy[Instrument[selectValue]])}
+                  onClick={(e) => handleClickBtn(data.rateBuy[Instrument[selectValue]], e)}
                   className='button__buy'>
                   BUY
                 </button>
@@ -120,7 +125,6 @@ function Ticker() {
             </div>
           </div>
         </fieldset>
-
       </form>
     </div>
   )
