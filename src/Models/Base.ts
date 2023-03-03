@@ -17,3 +17,12 @@ export interface Quote {
     minAmount: Decimal
     maxAmount: Decimal
 }
+
+export interface Count {
+    data: any;
+    listOfOrders: Array<any>;
+    connectionLoading: boolean;
+    connectionError: boolean;
+    connectionSuccess: boolean;
+    dataSuccess: boolean;
+}

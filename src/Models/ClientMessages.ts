@@ -1,5 +1,5 @@
 import {Envelope, Message} from "./Base";
-import {ClientMessageType, Instrument, OrderSide} from "../Enums";
+import {ClientMessageType, Instrument, OrderSide, OrderStatus} from "../Enums";
 import Decimal from "decimal.js";
 
 export interface ClientEnvelope extends Envelope {
@@ -21,6 +21,10 @@ export interface UnsubscribeMarketData extends ClientMessage {
 export interface PlaceOrder extends ClientMessage {
     instrument: Instrument
     side: OrderSide
-    amount: Decimal
+    amount: number | ''
     price: Decimal
+    id: number
+    creationTime: string
+    changeTime: string
+    status: OrderStatus
 }

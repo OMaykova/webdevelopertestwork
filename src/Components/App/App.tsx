@@ -1,16 +1,13 @@
 import React from 'react';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
+import Terminal from '../Terminal/Terminal'
 
 function App() {
   const dispatch = useDispatch();
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
+      <Terminal />
     </div>
   );
 }
