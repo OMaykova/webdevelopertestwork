@@ -25,3 +25,28 @@
 .table tr:hover td {
   background-color: rgb(108, 118, 163);
 }
+.table-btnCSV {
+  margin-top: 30px;
+  width: 300px;
+  height: 30px;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  box-shadow: 10px 15px 20px #000000;
+  background: #393737
+}
+.table-btnCSV_disabled {
+  background: #393737;
+  color: #C2C2C2;
+  cursor: default;
+}
+.table-btnCSV:hover {
+  opacity: 0.7;
+}
+.table-btnCSV_disabled:hover {
+  opacity: 1;
+}
