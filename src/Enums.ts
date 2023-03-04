@@ -24,10 +24,10 @@ export enum OrderStatus {
 }
 
 export enum Instrument {
-    chn_rub = 1,
+    cny_rub = 1,
     eur_rub,
     usd_rub,
     try_rub,
     byn_rub,
-    usd_eur,
+    eur_usd,
 }

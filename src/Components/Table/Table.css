@@ -1,0 +1,27 @@
+.table {
+  width: 800px;
+  border-spacing: 0 10px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  box-shadow: 10px 15px 40px #000000;
+  background: rgba(153, 163, 189, 0.6);
+  color: #ffffff;
+  font-size: 15px;
+} 
+.table-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+.order-item {
+  border: 1px solid #434040;
+  padding: 5px;
+}
+.order-item_buy {
+  color: rgb(29, 115, 50)
+}
+.order-item_sell {
+  color: rgb(212, 80, 80)
+}
+.table tr:hover td {
+  background-color: rgb(108, 118, 163);
+}

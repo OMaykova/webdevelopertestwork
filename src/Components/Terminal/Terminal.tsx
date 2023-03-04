@@ -5,8 +5,8 @@ import Table from '../Table/Table';
 function Terminal() {
   return (
     <div className="terminal">
-      <Ticker></Ticker>
-      <Table></Table>
+      <Ticker />
+      <Table />
     </div>
   );
 }

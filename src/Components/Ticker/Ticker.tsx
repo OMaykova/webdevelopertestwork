@@ -12,6 +12,7 @@ function Ticker() {
   const [selectValue, setSelectValue] = useState<Instrument>(1);
   const [isInputAmount, setIsInputAmount] = useState<boolean>(true);
   const [amount, setAmount] = useState<number|''>('');
+  const [scoreRUB, setScoreRUB] = useState<number>(50000)
 
   function handleChangeSelect(e: any) {
     e.preventDefault();
@@ -34,19 +35,23 @@ function Ticker() {
     }
   }
 
-  function handleClickBtn(rate: Decimal, e: any) {
+  function handleClickBtn(rate: Decimal, e: any, side: number) {
     e.preventDefault();
     let date: Date = new Date();
-    let dateOfCreate = `${date.getFullYear()}.${date.getMonth()}.${date.getDay()}`
-  
+    let result = date.toLocaleString("en-GB", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    let dateOfCreate = `${result} ${date.getHours()}:${date.getMinutes()}`
     if (listOfOrders.length === 0) {
       let array = [];
       let order: PlaceOrder = {
         id: 1,
         creationTime: dateOfCreate,
-        changeTime: dateOfCreate,
+        changeTime: dateOfCreate, //подтягивать с сервера в будущем
         status: 1,
-        side: 2,
+        side: side,
         price: rate,
         amount: amount,
         instrument: selectValue,
@@ -60,7 +65,7 @@ function Ticker() {
         creationTime: dateOfCreate,
         changeTime: dateOfCreate,
         status: 1,
-        side: 1,
+        side: side,
         price: rate,
         amount: amount,
         instrument: selectValue,
@@ -69,56 +74,55 @@ function Ticker() {
       dispatch(addToList(array))
     }
     setAmount('')
+    setIsInputAmount(true)
     alert('Ваша заявка принята!')
   }
 
   return (
     <div className='ticker'>
-      <form>
-        <fieldset>
-          <legend>Создание заявки</legend>
-          <div>
-            <select onChange={e => handleChangeSelect(e)}
-            className='select'>
-              <option value='1'>CHN/RUB</option>
+      <form className='form'>
+        <fieldset className='form__border'>
+          <legend className='form__title'>Создание заявки</legend>
+          <div className='form__inputs'>
+            <select onChange={e => handleChangeSelect(e)} className='select'>
+              <option value='1'>CNY/RUB</option>
               <option value='2'>EUR/RUB</option>
               <option value='3'>USD/RUB</option>
               <option value='4'>TRY/RUB</option>
               <option value='5'>BYN/RUB</option>
-              <option value='6'>USD/EUR</option>
+              <option value='6'>EUR/USD</option>
             </select>
-            <input placeholder="Объем заявки" value={amount} onChange={e => handleChangeInput(e)}
-            className='amount' />
+            <input className='amount' placeholder="Объем заявки" value={amount} onChange={e => handleChangeInput(e)} />
           </div>
-          <div>
-            <div>
-              <p>{data && data.rateSell[Instrument[selectValue]] * Number(amount)}</p>
-              {isInputAmount ? 
+          <div className='rates'>
+            <div className='rates__cell'>
+              <p className='rate'>{amount ? data && data.rateSell[Instrument[selectValue]] : 0}</p>
+              {isInputAmount || amount === 0 ? 
                 <button
                   disabled
-                  className='button__sell button__sell_disabled'>
+                  className='ticker-button ticker-button_sell ticker-button_disabled'>
                   SELL
                 </button>
               : 
                 <button
-                  onClick={(e) => handleClickBtn(data.rateSell[Instrument[selectValue]], e)}
-                  className='button__sell'>
+                  onClick={(e) => handleClickBtn(data.rateSell[Instrument[selectValue]], e, 2)}
+                  className='ticker-button ticker-button_sell'>
                   SELL
                 </button>
               }
             </div>
-            <div>
-              <p>{data && data.rateBuy[Instrument[selectValue]] * Number(amount)}</p>
-              {isInputAmount ? 
+            <div className='rates__cell'>
+              <p className='rate'>{amount ? data && data.rateBuy[Instrument[selectValue]] : 0}</p>
+              {isInputAmount || amount === 0 ? 
                 <button
                   disabled
-                  className='button__buy button__buy_disabled'>
-                  SELL
+                  className=' ticker-button ticker-button_buy ticker-button_disabled'>
+                  BUY
                 </button>
               : 
                 <button
-                  onClick={(e) => handleClickBtn(data.rateBuy[Instrument[selectValue]], e)}
-                  className='button__buy'>
+                  onClick={(e) => handleClickBtn(data.rateBuy[Instrument[selectValue]], e, 1)}
+                  className='ticker-button ticker-button_buy'>
                   BUY
                 </button>
               }

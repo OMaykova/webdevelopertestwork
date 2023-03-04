@@ -1,0 +1,96 @@
+.ticker {
+  width: 600px;
+}
+.form {
+  padding: 30px 0 60px;
+}
+.form__border {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #000000;
+  border-radius: 20px;
+  box-shadow: 10px 15px 20px #000000;
+  min-height: 400px;
+  padding: 30px 0;
+}
+.form__title {
+  color: #ffffff;
+  font-size: 32px;
+  margin: auto;
+}
+.form__inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 120px;
+  justify-content: space-between;
+}
+.select {
+  width: 400px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 15px;
+}
+.amount {
+  padding: 0;
+  width: 400px;
+  height: 50px;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 20px;
+  text-align: center;
+}
+.rates {
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  min-height: 150px;
+  padding-top: 40px;
+}
+.rates__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  justify-content: space-between;
+}
+.rate {
+  max-width: 190px;
+  margin: 0;
+  color: #ffffff;
+  font-size: 32px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ticker-button {
+  width: 180px;
+  height: 80px;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  box-shadow: 10px 15px 20px #000000;
+}
+.ticker-button_sell{
+  background-color: rgba(212, 80, 80, 0.5);
+}
+.ticker-button_buy {
+  background-color: rgba(29, 115, 50, 0.5);
+}
+.ticker-button_disabled {
+  background: #393737;
+  color: #C2C2C2;
+  cursor: default;
+}
+.ticker-button:hover {
+  opacity: 0.7;
+}
+.ticker-button_disabled:hover {
+  opacity: 1;
+}
