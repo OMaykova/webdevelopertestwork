@@ -94,3 +94,17 @@
 .ticker-button_disabled:hover {
   opacity: 1;
 }
+.current-rate__cell {
+  width: 150px;
+  height: 30px;
+  border: 1px solid;
+  border-radius: 15px;
+  font-size: 10px;
+  text-align: center;
+  margin: 20px 0;
+}
+.error {
+  color: white;
+  font-size: 10px;
+  margin-bottom: 10px;
+}

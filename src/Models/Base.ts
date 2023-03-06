@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import {ClientMessage} from "./ClientMessages";
+import {ClientMessage, PlaceOrder} from "./ClientMessages";
 import {ServerMessage} from "./ServerMessages";
 
 export interface Envelope {
@@ -20,5 +20,5 @@ export interface Quote {
 
 export interface Count {
     data: any;
-    listOfOrders: Array<any>;
+    listOfOrders: Array<PlaceOrder>;
 }

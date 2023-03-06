@@ -22,7 +22,7 @@ export interface PlaceOrder extends ClientMessage {
     instrument: Instrument
     side: OrderSide
     amount: number | ''
-    price: Decimal
+    price: number
     id: number
     creationTime: string
     changeTime: string

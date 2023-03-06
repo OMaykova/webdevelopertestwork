@@ -1,9 +1,8 @@
 import './Ticker.css';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dataSelector, addToList } from '../../store/dataSlice';
 import { PlaceOrder } from '../../Models/ClientMessages'
-import Decimal from 'decimal.js';
 import { Instrument } from '../../Enums';
 
 function Ticker() {
@@ -12,19 +11,28 @@ function Ticker() {
   const [selectValue, setSelectValue] = useState<Instrument>(1);
   const [isInputAmount, setIsInputAmount] = useState<boolean>(true);
   const [amount, setAmount] = useState<number|''>('');
-  const [scoreRUB, setScoreRUB] = useState<number>(50000)
+  const [currentBid, setCurrentBid] = useState(0.00);
+  const [currentOffer, setCurrentOffer] = useState(0.00);
+  const inputRefBid = useRef<HTMLInputElement>(null);
+  const inputRefOffer = useRef<HTMLInputElement>(null);
+  const [isBidValid, setIsBidValid] = useState<boolean>(false)
+  const [isOfferValid, setIsOfferValid] = useState<boolean>(false)
+  const [bidError, setBidError] = useState<string>('')
+  const [offerError, setOfferError] = useState<string>('')
+
+  useEffect(()=>{setCurrentBid(data.bid[Instrument[selectValue]])},[data.bid, selectValue])
+  useEffect(()=>{setCurrentOffer(data.offer[Instrument[selectValue]])},[data.offer, selectValue])
 
   function handleChangeSelect(e: any) {
-    e.preventDefault();
     setSelectValue(e.target.value)
   }
   
   function isValid(value: string) {
-    return /^-?\d+$/.test(value);
+    return /^\d+$/.test(value);
   }
 
   function handleChangeInput(e: React.ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
+
     if ((isValid(e.target.value) || e.target.value === "") && e.target.value.length < 8) {
       if (e.target.value === "") {
         setIsInputAmount(true)
@@ -32,10 +40,32 @@ function Ticker() {
         setIsInputAmount(false)
       }
       setAmount(+e.target.value)
+      // setCurrentBid(data.bid[Instrument[selectValue]])
     }
   }
-
-  function handleClickBtn(rate: Decimal, e: any, side: number) {
+  function handleChangeBid(e: React.ChangeEvent<HTMLInputElement>) {
+    const {value} = e.target;
+    const validValue = /^(\b([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|500)\b(.\d{1,2}))$/.test(value)
+    setIsBidValid(validValue)
+    if (!validValue) {
+      setBidError('Ввод в формате от 0.00 до 500.00. В противном случае - заявка будет оформлена по текущему price')
+    } else {
+      setBidError('')
+      setCurrentBid(+e.target.value)
+    }
+  }
+  function handleChangeOffer(e: React.ChangeEvent<HTMLInputElement>) {
+    const {value} = e.target;
+    const validValue = /^(\b([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|500)\b(.\d{1,2}))$/.test(value)
+    setIsOfferValid(validValue)
+    if (!validValue) {
+      setOfferError('Ввод в формате от 0.00 до 500.00. В противном случае - заявка будет оформлена по текущему price')
+    } else {
+      setOfferError('')
+      setCurrentOffer(+e.target.value)
+    }
+  }
+  function handleClickBtn(rate: number, e: any, side: number) {
     e.preventDefault();
     let date: Date = new Date();
     let result = date.toLocaleString("en-GB", {
@@ -49,7 +79,7 @@ function Ticker() {
       let order: PlaceOrder = {
         id: 1,
         creationTime: dateOfCreate,
-        changeTime: dateOfCreate, //подтягивать с сервера в будущем
+        changeTime: dateOfCreate, 
         status: 1,
         side: side,
         price: rate,
@@ -75,8 +105,17 @@ function Ticker() {
     }
     setAmount('')
     setIsInputAmount(true)
+    setCurrentBid(0.00)
+    setCurrentOffer(0.00)
+    setBidError('')
+    setOfferError('')
+    if(inputRefBid && inputRefBid.current) {
+    inputRefBid.current.value = '';}
+    if(inputRefOffer && inputRefOffer.current) {
+      inputRefOffer.current.value = '';}
     alert('Ваша заявка принята!')
   }
+
 
   return (
     <div className='ticker'>
@@ -92,11 +131,13 @@ function Ticker() {
               <option value='5'>BYN/RUB</option>
               <option value='6'>EUR/USD</option>
             </select>
-            <input className='amount' placeholder="Объем заявки" value={amount} onChange={e => handleChangeInput(e)} />
+            <input type='number' className='amount' onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault()}} placeholder="Объем заявки" value={amount} onChange={e => handleChangeInput(e)} />
           </div>
           <div className='rates'>
             <div className='rates__cell'>
-              <p className='rate'>{amount ? data && data.rateSell[Instrument[selectValue]] : 0}</p>
+              <p className='rate'>{amount ? data && data.bid[Instrument[selectValue]] : 0}</p>
+              <input className='current-rate__cell' onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault()}} onChange={e =>handleChangeBid(e)} ref={inputRefBid} type='number' step="0.01" min="0" max='500' placeholder='Укажите свою цену' title="This should be a number with up to 2 decimal places." />
+              <span className='error'>{bidError}</span>
               {isInputAmount || amount === 0 ? 
                 <button
                   disabled
@@ -105,14 +146,16 @@ function Ticker() {
                 </button>
               : 
                 <button
-                  onClick={(e) => handleClickBtn(data.rateSell[Instrument[selectValue]], e, 2)}
+                  onClick={(e) => handleClickBtn(currentBid && currentBid!==0? currentBid : data.bid[Instrument[selectValue]], e, 2)}
                   className='ticker-button ticker-button_sell'>
                   SELL
                 </button>
               }
             </div>
             <div className='rates__cell'>
-              <p className='rate'>{amount ? data && data.rateBuy[Instrument[selectValue]] : 0}</p>
+              <p className='rate'>{amount ? data && data.offer[Instrument[selectValue]] : 0}</p>
+              <input className='current-rate__cell' onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault()}} onChange={e =>handleChangeOffer(e)} ref={inputRefOffer} type='number' step="0.01" min="0" max='500' placeholder='Укажите свою цену' title="This should be a number with up to 2 decimal places." />
+              <span className='error'>{offerError}</span>
               {isInputAmount || amount === 0 ? 
                 <button
                   disabled
@@ -121,7 +164,7 @@ function Ticker() {
                 </button>
               : 
                 <button
-                  onClick={(e) => handleClickBtn(data.rateBuy[Instrument[selectValue]], e, 1)}
+                  onClick={(e) => handleClickBtn(currentOffer && currentOffer!==0? currentOffer : data.offer[Instrument[selectValue]], e, 1)}
                   className='ticker-button ticker-button_buy'>
                   BUY
                 </button>

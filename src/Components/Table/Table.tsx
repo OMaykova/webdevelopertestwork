@@ -1,11 +1,12 @@
 import './Table.css';
-import { useSelector } from "react-redux";
-import { dataSelector } from "../../store/dataSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { dataSelector, removeOrder } from "../../store/dataSlice";
 import { Instrument } from '../../Enums';
 import { OrderStatus } from '../../Enums';
 import { OrderSide } from '../../Enums';
 
 function Table() {
+  const dispatch = useDispatch();
   const { listOfOrders } = useSelector(dataSelector);
   function renderListItems(item: any, index: any) {
     return (
@@ -18,6 +19,12 @@ function Table() {
         <td className={item.side===1 ? 'order-item order-item_buy' : 'order-item order-item_sell'} >{item.price}</td>
         <td className={item.side===1 ? 'order-item order-item_buy' : 'order-item order-item_sell'} >{item.amount}</td>
         <td className='order-item' >{Instrument[item.instrument]}</td>
+        <td className='order-item' >{item.status === 1 ? 
+          <button onClick={() => handleDeleteTableItem(item.id)}>
+            Удалить
+          </button>
+          : ''
+        }</td>
       </tr>
     )
   }
@@ -54,7 +61,10 @@ function Table() {
     temp_link.click();
     document.body.removeChild(temp_link);
   }
-      
+  
+  function handleDeleteTableItem(id: number) {
+    dispatch(removeOrder(id))
+  }
   return (
     <>
       <table className='table'>
@@ -68,6 +78,7 @@ function Table() {
             <th className='order-item'>Price</th>
             <th className='order-item'>Amount</th>
             <th className='order-item'>Instrument</th>
+            <th className='order-item'>Action</th>
           </tr>
         </thead>
         <tbody>
