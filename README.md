@@ -31,14 +31,15 @@
 
 Развитие проекта:
   * разработать webSocet для взаимодействия с сервером
-	* реализовать сортировку таблицы заявок
-	* реализовать получение нотификаций об изменениях статуса заявок
+  * реализовать сортировку таблицы заявок
+  * реализовать получение нотификаций об изменениях статуса заявок
 
 ## Запуск проекта
 
-(http://omaykova.github.io/webdevelopertestwork)[http://omaykova.github.io/webdevelopertestwork]
+[http://omaykova.github.io/webdevelopertestwork](http://omaykova.github.io/webdevelopertestwork)
 
 ИЛИ
 
 'npm i' - для установки NPM
+
 'npm start' - запустите приложение в "режиме разработки". Открыть http://localhost:3000 для просмотра в браузере
